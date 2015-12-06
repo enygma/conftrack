@@ -1,0 +1,33 @@
+{% extends "layout.main.twig" %}
+
+{% block content %}
+
+<h2>Register</h2>
+
+<form method="POST" action="/user/register">
+  <div class="form-group">
+    <label for="username">Username</label>
+    <input type="text" class="form-control" name="username" id="username" placeholder="Username">
+  </div>
+  <div class="form-group">
+    <label for="full_name">Full Name</label>
+    <input type="text" class="form-control" name="full_name" id="full_name" placeholder="Full Name">
+  </div>
+  <div class="form-group">
+    <label for="email">Email</label>
+    <input type="email" class="form-control" name="email" id="Email" placeholder="Email">
+  </div>
+  <div class="form-group">
+    <label for="password">Password</label>
+    <input type="password" class="form-control" name="password" id="password" placeholder="Password">
+  </div>
+  <div class="form-group">
+    <label for="password">Password Verify</label>
+    <input type="password" class="form-control" name="password_verify" id="password_verify" placeholder="Verify Password">
+  </div>
+  <button type="submit" name="register" class="btn btn-default">Register</button>
+</form>
+
+<br/>
+Already have an account? <a href="/user/login">Login here</a>.
+{% endblock %}

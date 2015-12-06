@@ -1,0 +1,88 @@
+{% extends "layout.main.twig" %}
+
+{% block content %}
+
+<script>
+$(function() {
+
+  function addToList(userId)
+  {
+    var list = $('#user-id-list').val().split(',');
+    list.push(userId);
+    $('#user-id-list').val(list.join(','));
+  }
+  function removeFromList(userId)
+  {
+    var list = $('#user-id-list').val().split(',');
+    var index = list.indexOf(userId);
+    console.log(index);
+
+    if (index >= 0) {
+      list.remove(userId);
+    }
+    $('#user-id-list').val(list.join(','));
+  }
+  function isInList(userId)
+  {
+    var list = $('#user-id-list').val().split(',');
+    var index = list.indexOf(userId);
+    return (index >= 0);
+  }
+
+  $('#add-user-btn').click(function(e) {
+    e.preventDefault();
+    var userId = $('#user_list').val();
+    var userName = $('#user_list').text();
+
+    if (isInList(userId) == false) {
+      $('#user-tbody').append(
+        '<tr id="row'+userId+'"><td>'+$('#user_list').text()+'</td>'
+        +'<td><a href="#" class="user-remove" id="'+userId+'">X</a></td></tr>'
+      );
+      addToList(userId);
+    }
+  });
+  $('#user-tbody').on('click', 'a.user-remove', function(e) {
+    e.preventDefault();
+    var userId = $(e.target).attr('id');
+    $('#user-tbody #row'+userId).remove();
+
+    removeFromList(userId);
+  });
+});
+</script>
+
+<h2>Create Sponsor</h2>
+
+<form method="POST" action="/sponsor/create">
+  <div class="form-group">
+    <label for="username">Name</label>
+    <input type="text" class="form-control" name="name" id="name" placeholder="Sponsor Name">
+  </div>
+  <div class="form-group">
+    <label for="description">Description</label>
+    <textarea class="form-control" name="description" id="description"></textarea>
+  </div>
+  <div class="form-group">
+    <label for="logo">Logo</label>
+    <input type="file" class="form-control" name="logo" id="logo">
+  </div>
+  <div class="form-group">
+    <label for="sponsor_users">User(s)</label><br/>
+    <table class="table">
+      <tbody id="user-tbody">
+      </tbody>
+    </table>
+
+    <select name="user_list" id="user_list">
+      {% for user in users %}
+      <option value="{{ user.id }}">{{ user.fullName }} ({{ user.username }})</option>
+      {% endfor %}
+    </select>
+    <input type="button" name="add-user-btn" id="add-user-btn" value="Add"/>
+  </div>
+  <input type="hidden" name="user-id-list" id="user-id-list" value=""/>
+  <button type="submit" name="create" class="btn btn-default">Create</button>
+</form>
+
+{% endblock %}

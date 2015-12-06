@@ -1,0 +1,37 @@
+{% extends "layout.main.twig" %}
+
+{% block content %}
+
+<h2>Users</h2>
+
+<table class="table table-striped">
+  <thead>
+    <th>Username</th>
+    <th>Full Name</th>
+    <th>Email</th>
+    <th>&nbsp;</th>
+  </thead>
+  <tbody>
+    {% for user in users %}
+    <tr>
+      <td><a href="/user/view/{{ user.id }}">{{ user.username }}</a></td>
+      <td>{{ user.fullName }}</td>
+      <td>{{ user.email}}</td>
+      <td>
+        <a href="#" id="user-{{ user.id }}" class="glyphicon glyphicon-off user-status-toggle"></a>
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+
+</table>
+
+<script>
+$(function() {
+  $('a.user-status-toggle').click(function(e) {
+    console.log('test');
+  });
+});
+</script>
+
+{% endblock %}

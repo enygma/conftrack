@@ -1,0 +1,11 @@
+{% extends "layout.main.twig" %}
+
+{% block content %}
+
+<h2>{{ user.fullName }}</h2>
+<b>{{ user.username }}</b>
+<br/><br/>
+<b>Status:</b> {{ user.status }}<br/>
+<b>Email:</b> {{ user.email }}<br/>
+
+{% endblock %}

@@ -19,13 +19,35 @@
   </div>
   <div class="form-group">
     <label for="password">Sponsor(s)</label><br/>
+    <table class="table">
+      <tbody id="sponsor-tbody">
+      </tbody>
+    </table>
+
     <select name="sponsor_list" id="sponsor_list">
       {% for sponsor in sponsors %}
       <option value="{{ sponsor.id }}">{{ sponsor.name }}</option>
       {% endfor %}
     </select>
+    <input type="button" name="add-sponsor-btn" class="btn" id="add-sponsor-btn" value="Add"/>
   </div>
+  <input type="hidden" name="user-id-list" id="user-id-list" value=""/>
   <button type="submit" name="create" class="btn btn-default">Create</button>
 </form>
+
+<!-- <script src="/assets/js/controls/add-list.js"></script> -->
+<script>
+$(function() {
+  // Set up our add list instance
+  requirejs(['controls/add-list'], function(AddList) {
+    AddList.init(
+      $('#user-id-list'),
+      $('#sponsor_list'),
+      $('#add-sponsor-btn'),
+      $('#sponsor-tbody')
+    );
+  });
+});
+</script>
 
 {% endblock %}

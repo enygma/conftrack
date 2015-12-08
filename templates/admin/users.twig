@@ -2,9 +2,18 @@
 
 {% block content %}
 
+<style>
+tr.disabled {
+  background-color: #f2abab;
+}
+tr.enabled {
+  background-color: #FFFFFF;
+}
+</style>
+
 <h2>Users</h2>
 
-<table class="table table-striped">
+<table class="table">
   <thead>
     <th>Username</th>
     <th>Full Name</th>
@@ -13,7 +22,7 @@
   </thead>
   <tbody>
     {% for user in users %}
-    <tr>
+    <tr id="user-row-{{ user.id }}" class="{% if user.status == 'inactive' %} disabled {% else %} enabled {% endif %}">
       <td><a href="/user/view/{{ user.id }}">{{ user.username }}</a></td>
       <td>{{ user.fullName }}</td>
       <td>{{ user.email}}</td>
@@ -29,7 +38,19 @@
 <script>
 $(function() {
   $('a.user-status-toggle').click(function(e) {
-    console.log('test');
+    var userId = $(e.target).attr('id').split('-')[1];
+    var currentStatus = $('#user-row-'+userId).attr('class').trim();
+
+    $.post('/admin/users/status', { userId: userId }, function(data) {
+      console.log(data);
+      if (data.success == true) {
+        if (typeof currentStatus == 'undefined' || currentStatus == 'enabled') {
+          $('#user-row-'+userId).removeClass('enabled').addClass('disabled');
+        } else {
+          $('#user-row-'+userId).removeClass('disabled').addClass('enabled');
+        }
+      }
+    });
   });
 });
 </script>

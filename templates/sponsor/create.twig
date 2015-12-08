@@ -15,7 +15,6 @@ $(function() {
   {
     var list = $('#user-id-list').val().split(',');
     var index = list.indexOf(userId);
-    console.log(index);
 
     if (index >= 0) {
       list.remove(userId);
@@ -79,7 +78,7 @@ $(function() {
       <option value="{{ user.id }}">{{ user.fullName }} ({{ user.username }})</option>
       {% endfor %}
     </select>
-    <input type="button" name="add-user-btn" id="add-user-btn" value="Add"/>
+    <input type="button" name="add-user-btn" class="btn" id="add-user-btn" value="Add"/>
   </div>
   <input type="hidden" name="user-id-list" id="user-id-list" value=""/>
   <button type="submit" name="create" class="btn btn-default">Create</button>

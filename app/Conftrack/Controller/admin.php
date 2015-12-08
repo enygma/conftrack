@@ -14,11 +14,19 @@ $app->group('/admin', function() use ($app) {
 
   });
 
-  $app->get('/users/status', function($request, $response, $args) {
-    $data = [];
+  $app->post('/users/status', function($request, $response, $args) {
+    $data = ['success' => false];
     $body = $request->getParsedBody();
 
-    error_log(print_r($body, true));
+    $user = new \Conftrack\Model\User($this->getContainer()->get('db'));
+    $user->findById($body['userId']);
+
+    if ($user->id == null) {
+      throw new \Exception('User not found!');
+    } else {
+      ($user->status == 'active') ? $user->disable() : $user->enable();
+      $data['success'] = true;
+    }
 
     return $response->withJson($data);
   });

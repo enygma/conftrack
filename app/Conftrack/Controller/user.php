@@ -18,6 +18,12 @@ $app->group('/user', function() use ($app) {
       $this->flash->addMessage('danger', 'Account not found.');
     }
 
+    if (!$user->isActive()) {
+      $this->flash->addMessage('danger', 'User inactive!');
+			$this->view->render($response, 'user/login.twig', $data);
+			return false;
+    }
+
     $subject = new \Conftrack\VerifyUser($user);
     $enforcer = \Psecio\Verify\Enforcer::make('password');
 

@@ -2,55 +2,6 @@
 
 {% block content %}
 
-<script>
-$(function() {
-
-  function addToList(userId)
-  {
-    var list = $('#user-id-list').val().split(',');
-    list.push(userId);
-    $('#user-id-list').val(list.join(','));
-  }
-  function removeFromList(userId)
-  {
-    var list = $('#user-id-list').val().split(',');
-    var index = list.indexOf(userId);
-
-    if (index >= 0) {
-      list.remove(userId);
-    }
-    $('#user-id-list').val(list.join(','));
-  }
-  function isInList(userId)
-  {
-    var list = $('#user-id-list').val().split(',');
-    var index = list.indexOf(userId);
-    return (index >= 0);
-  }
-
-  $('#add-user-btn').click(function(e) {
-    e.preventDefault();
-    var userId = $('#user_list').val();
-    var userName = $('#user_list').text();
-
-    if (isInList(userId) == false) {
-      $('#user-tbody').append(
-        '<tr id="row'+userId+'"><td>'+$('#user_list').text()+'</td>'
-        +'<td><a href="#" class="user-remove" id="'+userId+'">X</a></td></tr>'
-      );
-      addToList(userId);
-    }
-  });
-  $('#user-tbody').on('click', 'a.user-remove', function(e) {
-    e.preventDefault();
-    var userId = $(e.target).attr('id');
-    $('#user-tbody #row'+userId).remove();
-
-    removeFromList(userId);
-  });
-});
-</script>
-
 <h2>Create Sponsor</h2>
 
 <form method="POST" action="/sponsor/create">
@@ -83,5 +34,19 @@ $(function() {
   <input type="hidden" name="user-id-list" id="user-id-list" value=""/>
   <button type="submit" name="create" class="btn btn-default">Create</button>
 </form>
+
+<script>
+$(function() {
+  // Set up our add list instance
+  requirejs(['controls/add-list'], function(AddList) {
+    AddList.init(
+      $('#user-id-list'),
+      $('#user_list'),
+      $('#add-user-btn'),
+      $('#user-tbody')
+    );
+  });
+});
+</script>
 
 {% endblock %}

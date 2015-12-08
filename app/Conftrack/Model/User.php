@@ -81,4 +81,20 @@ class User extends \Modler\Model\Mysql
 
 		parent::save();
 	}
+
+  public function disable()
+  {
+    $this->status = 'inactive';
+    $this->save();
+  }
+  public function enable()
+  {
+    $this->status = 'active';
+    $this->save();
+  }
+  public function isActive()
+  {
+    return ($this->status == 'active');
+  }
+
 }

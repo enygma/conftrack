@@ -1,0 +1,68 @@
+{% extends "layout.main.twig" %}
+
+{% block content %}
+
+<h2>Event: {{ event.name }}</h2>
+
+{{ event.startDate }} - {{ event.endDate }}
+
+<hr/>
+<h4>Sponsor(s)</h4>
+
+<table class="table">
+  <tbody id="sponsor-tbody">
+  {% set eventSponsorList = '' %}
+  {% for sponsor in eventSponsors %}
+  <tr id="row{{ sponsor.id }}">
+    <td><a href="/sponsor/view/{{ sponsor.id }}">{{ sponsor.name }}</a></td>
+    <td><a href="#" class="remove" id="{{ sponsor.id }}">X</a></td>
+  </tr>
+  {% set eventSponsorList = eventSponsorList ~ ',' ~ sponsor.id %}
+  {% endfor %}
+  </tbody>
+</table>
+
+<select name="sponsor_list" id="sponsor_list">
+  {% for sponsor in sponsors %}
+  <option value="{{ sponsor.id }}">{{ sponsor.name }}</option>
+  {% endfor %}
+</select>
+<input type="button" name="add-sponsor-btn" class="btn" id="add-sponsor-btn" value="Add"/>
+
+<input type="hidden" name="user-id-list" id="user-id-list" value="{{ eventSponsorList }}"/>
+
+<!-- <script src="/assets/js/controls/add-list.js"></script> -->
+<script>
+$(function() {
+  // Set up our add list instance
+  requirejs(['controls/add-list'], function(AddList) {
+    AddList.init(
+      $('#user-id-list'),
+      $('#sponsor_list'),
+      $('#add-sponsor-btn'),
+      $('#sponsor-tbody')
+    );
+  });
+  $('#add-sponsor-btn').click(function(e) {
+    e.preventDefault();
+    data = { sponsorId: $('#sponsor_list').val() };
+    $.post('/event/{{ event.id }}/sponsor', data, function(data) {
+      // do nothing here - success!
+    });
+    $('#sponsor-tbody').on('click', 'a.remove', function(e) {
+      $.ajax({
+        url: '/event/{{ event.id }}/sponsor',
+        method: 'DELETE',
+        dataType: 'json',
+        data: { sponsorId: $('#sponsor_list').val() },
+        success: function(data) {
+          console.log(data);
+        }
+      })
+    });
+  });
+});
+</script>
+
+
+{% endblock %}

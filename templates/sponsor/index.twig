@@ -1,0 +1,27 @@
+{% extends "layout.main.twig" %}
+
+{% block content %}
+
+<h2>{{ sponsor.name }}</h2>
+<p>
+  {{ sponsor.description }}
+</p>
+<hr/>
+
+<h4>Sponsors</h4>
+<table class="table table-striped">
+<thead>
+  <th>Name</th>
+  <th>Description</td>
+</thead>
+<tbody>
+  {% for sponsor in sponsors %}
+  <tr>
+    <td><a href="/sponsor/view/{{ sponsor.id }}">{{ sponsor.name }}</a></td>
+    <td>{{ sponsor.description }}</td>
+  </tr>
+  {% endfor %}
+</tbody>
+</table>
+
+{% endblock %}

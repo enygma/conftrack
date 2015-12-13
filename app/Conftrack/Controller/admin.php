@@ -30,4 +30,46 @@ $app->group('/admin', function() use ($app) {
 
     return $response->withJson($data);
   });
+
+  $app->get('/groups', function($request, $response, $args) {
+    $groups = new \Conftrack\Collection\Groups($this->getContainer()->get('db'));
+    $groups->findAll();
+
+    $data = [
+      'groups' => $groups->toArray(true)
+    ];
+
+    $this->view->render($response, 'groups/index.twig', $data);
+  });
+
+  $app->get('/groups/create', function($request, $response, $args) {
+    $data = [];
+    $this->view->render($response, 'groups/create.twig', $data);
+  });
+
+  $app->post('/groups/create', function($request, $response, $args) {
+    $data = ['success' => false];
+    $body = $request->getParsedBody();
+
+    $group = new \Conftrack\Model\Group($this->getContainer()->get('db'));
+    $group->load([
+      'name' => $body['name'],
+      'group_key' => $body['key'],
+      'description' => $body['description']
+    ]);
+
+    try {
+      $group->verify();
+      $group->save();
+
+      $message = 'Group created successfully!';
+      $data['success'] = true;
+    } catch (\Exception $e) {
+      $message = "Error: ".implode("\n", $group->getMessages());
+    }
+    $type = ($data['success'] == false) ? 'danger' : 'success';
+    $this->flash->addMessage($type, $message);
+
+    $this->view->render($response, 'groups/create.twig', $data);
+  });
 });

@@ -1,0 +1,24 @@
+{% extends "layout.main.twig" %}
+
+{% block content %}
+
+<h2>Create Group</h2>
+
+<form method="POST" action="/admin/groups/create">
+  <div class="form-group">
+    <label for="name">Name</label>
+    <input type="text" class="form-control" name="name" id="name" placeholder="Group Name" value="{{ group.name }}">
+  </div>
+  <div class="form-group">
+    <label for="key">Key</label>
+    <input type="text" class="form-control" name="key" id="key"
+      placeholder="Key (example: 'admin' or 'group1')" value="{{ group.key }}">
+  </div>
+  <div class="form-group">
+    <label for="description">Description</label>
+    <textarea name="description" id="description" class="form-control">{{ group.description }}</textarea>
+  </div>
+  <button type="submit" name="create" class="btn btn-default">Create</button>
+</form>
+
+{% endblock %}

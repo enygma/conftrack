@@ -1,11 +1,24 @@
 {% extends "layout.main.twig" %}
 
 {% block content %}
-
-<h2>{{ user.fullName }}</h2>
-<b>{{ user.username }}</b>
 <br/><br/>
-<b>Status:</b> {{ user.status }}<br/>
-<b>Email:</b> {{ user.email }}<br/>
+<div class="row">
+  <div class="col-md-2"><img src="/assets/img/default-user.png"/></div>
+  <div class="col-md-10">
+    <h2>{{ viewUser.fullName }}</h2>
+    <b>{{ viewUser.username }}</b>
+    <br/><br/>
+    <b>Status:</b> {{ viewUser.status }}<br/>
+    <b>Email:</b> {{ viewUser.email }}<br/>
 
+    <h3>Sponsors</h3>
+    <table class="table">
+    {% for sponsor in sponsors %}
+    <tr>
+      <td><a href="/sponsor/view/{{ sponsor.id }}">{{ sponsor.name }}</a></td>
+    </tr>
+    {% endfor %}
+    </table>
+  </div>
+</div>
 {% endblock %}

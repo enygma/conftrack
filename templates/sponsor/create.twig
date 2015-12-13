@@ -2,16 +2,39 @@
 
 {% block content %}
 
-<h2>Create Sponsor</h2>
+{% if not action %}
+  {% set action = 'create' %}
+{% endif %}
 
-<form method="POST" action="/sponsor/create">
+{% if action == 'create' %}
+  {% set path = '/sponsor/create' %}
+  {% set button = 'Create' %}
+{% else %}
+  {% set path = '/sponsor/edit/' ~ sponsor.id %}
+  {% set button = 'Save' %}
+{% endif %}
+
+{% if message %}
+  <br/><br/>
+  <div class="alert alert-{% if success %}success{% else %}danger{% endif %}" role="alert">
+    {{ message }}
+  </div>
+{% endif %}
+
+<h2>{{ action|capitalize }} Sponsor</h2>
+
+<form method="POST" action="{{ path }}" enctype="multipart/form-data">
   <div class="form-group">
     <label for="username">Name</label>
-    <input type="text" class="form-control" name="name" id="name" placeholder="Sponsor Name">
+    {% if action == 'create' %}
+    <input type="text" class="form-control" name="name" id="name" placeholder="Sponsor Name" value="{{ sponsor.name }}">
+    {% else %}
+      <br/>{{ sponsor.name }}
+    {% endif %}
   </div>
   <div class="form-group">
     <label for="description">Description</label>
-    <textarea class="form-control" name="description" id="description"></textarea>
+    <textarea class="form-control" name="description" id="description">{{ sponsor.description }}</textarea>
   </div>
   <div class="form-group">
     <label for="logo">Logo</label>
@@ -21,6 +44,12 @@
     <label for="sponsor_users">User(s)</label><br/>
     <table class="table">
       <tbody id="user-tbody">
+        {% for user in sponsorUsers %}
+        <tr id="row{{ user.id }}">
+          <td>{{ user.fullName }} (<a href="/user/view/{{ user.id }}">{{ user.username }}</a>)</td>
+          <td><a href="#" class="remove" id="{{ user.id }}">X</a></td>
+        </tr>
+        {% endfor %}
       </tbody>
     </table>
 
@@ -32,7 +61,7 @@
     <input type="button" name="add-user-btn" class="btn" id="add-user-btn" value="Add"/>
   </div>
   <input type="hidden" name="user-id-list" id="user-id-list" value=""/>
-  <button type="submit" name="create" class="btn btn-default">Create</button>
+  <button type="submit" name="create" class="btn btn-default">{{ button|capitalize }}</button>
 </form>
 
 <script>
@@ -45,6 +74,26 @@ $(function() {
       $('#add-user-btn'),
       $('#user-tbody')
     );
+  });
+
+  $('#add-user-btn').click(function(e) {
+    e.preventDefault();
+    data = { userId: $('#user_list').val() };
+    $.post('/sponsor/{{ sponsor.id }}/user', data, function(data) {
+      // do nothing here - success!
+    });
+  });
+  $('#user-tbody').on('click', 'a.remove', function(e) {
+    var target = $(e.target);
+    $.ajax({
+      url: '/sponsor/{{ sponsor.id }}/user',
+      method: 'DELETE',
+      dataType: 'json',
+      data: { userId: target.attr('id') },
+      success: function(data) {
+        console.log(data);
+      }
+    });
   });
 });
 </script>

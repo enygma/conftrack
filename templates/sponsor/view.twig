@@ -1,27 +1,88 @@
 {% extends "layout.main.twig" %}
 
 {% block content %}
-
-<h2>{{ sponsor.name }}</h2>
-<p>
-  {{ sponsor.description }}
-</p>
+<br/><br/>
+<div class="row">
+  <div class="col-md-2"><img src="/assets/img/default-sponsor.png"/></div>
+  <div class="col-md-10">
+    <h2>{{ sponsor.name }}</h2>
+    <p>
+      {{ sponsor.description }}
+    </p>
+  </div>
+</div>
 <hr/>
+
+<h4>Files</h4>
+<table class="table table-striped">
+  {% for file in files %}
+  <tr>
+    <td width="150"><img width="80" src="/sponsor/{{ sponsor.id }}/file/{{ file.hash }}"/></td>
+    <td style="text-align:left">
+      <b>Filename:</b> {{ file.name }}<br/>
+      <b>Uploaded:</b> {{ file.created }}
+    </td>
+  </tr>
+  {% endfor %}
+</table>
 
 <h4>Users</h4>
 <table class="table table-striped">
 <thead>
   <th>Username</th>
-  <th>Full Name</th>
+  <th>&nbsp;</th>
 </thead>
-<tbody>
-  {% for user in users %}
-  <tr>
-    <td><a href="/user/view/{{ user.id }}">{{ user.username }}</a></td>
-    <td>{{ user.fullName }}</td>
+<tbody id="user-tbody">
+  {% for user in sponsorUsers %}
+  <tr id="row{{ user.id }}">
+    <td>{{ user.fullName }} (<a href="/user/view/{{ user.id }}">{{ user.username }}</a>)</td>
+    <td><a href="#" class="remove" id="{{ user.id }}">X</a></td>
   </tr>
   {% endfor %}
 </tbody>
 </table>
+
+
+<select name="user_list" id="user_list">
+  {% for user in users %}
+  <option value="{{ user.id }}">{{ user.fullName }} ({{ user.username }})</option>
+  {% endfor %}
+</select>
+<input type="button" name="add-user-btn" class="btn" id="add-user-btn" value="Add"/>
+<input type="hidden" name="user-id-list" id="user-id-list" value=""/>
+
+<script>
+$(function() {
+  // Set up our add list instance
+  requirejs(['controls/add-list'], function(AddList) {
+    AddList.init(
+      $('#user-id-list'),
+      $('#user_list'),
+      $('#add-user-btn'),
+      $('#user-tbody')
+    );
+  });
+
+  $('#add-user-btn').click(function(e) {
+    e.preventDefault();
+    data = { userId: $('#user_list').val() };
+    $.post('/sponsor/{{ sponsor.id }}/user', data, function(data) {
+      // do nothing here - success!
+    });
+  });
+  $('#user-tbody').on('click', 'a.remove', function(e) {
+    var target = $(e.target);
+    $.ajax({
+      url: '/sponsor/{{ sponsor.id }}/user',
+      method: 'DELETE',
+      dataType: 'json',
+      data: { userId: target.attr('id') },
+      success: function(data) {
+        console.log(data);
+      }
+    });
+  });
+});
+</script>
 
 {% endblock %}

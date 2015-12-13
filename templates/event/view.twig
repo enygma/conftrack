@@ -2,10 +2,15 @@
 
 {% block content %}
 
-<h2>Event: {{ event.name }}</h2>
+<br/><br/>
+<div class="row">
+  <div class="col-md-2"><img src="/assets/img/default-event.png"/></div>
+  <div class="col-md-10">
+      <h2>Event: {{ event.name }}</h2>
 
-{{ event.startDate }} - {{ event.endDate }}
-
+      {{ event.startDate }} - {{ event.endDate }}
+  </div>
+</div>
 <hr/>
 <h4>Sponsor(s)</h4>
 
@@ -49,16 +54,17 @@ $(function() {
     $.post('/event/{{ event.id }}/sponsor', data, function(data) {
       // do nothing here - success!
     });
-    $('#sponsor-tbody').on('click', 'a.remove', function(e) {
-      $.ajax({
-        url: '/event/{{ event.id }}/sponsor',
-        method: 'DELETE',
-        dataType: 'json',
-        data: { sponsorId: $('#sponsor_list').val() },
-        success: function(data) {
-          console.log(data);
-        }
-      })
+  });
+  $('#sponsor-tbody').on('click', 'a.remove', function(e) {
+    var target = $(e.target);
+    $.ajax({
+      url: '/event/{{ event.id }}/sponsor',
+      method: 'DELETE',
+      dataType: 'json',
+      data: { sponsorId: target.attr('id') },
+      success: function(data) {
+        // console.log(data);
+      }
     });
   });
 });

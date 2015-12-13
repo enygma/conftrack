@@ -98,10 +98,62 @@ $app->group('/user', function() use ($app) {
     $user = new \Conftrack\Model\User($db);
     $user->findById($args['userId']);
 
+    $groups = new \Conftrack\Collection\Groups($db);
+    $groups->findAll();
+
     $data = [
       'viewUser' => $user->toArray(),
-      'sponsors' => $user->sponsors->toArray(true)
+      'sponsors' => $user->sponsors->toArray(true),
+      'groups' => $groups->toArray(true),
+      'userGroups' => $user->groups->toArray(true)
     ];
     $this->view->render($response, 'user/view.twig', $data);
+  });
+
+  $app->post('/{userId}/group', function($request, $response, $args) {
+    $data = ['success' => false];
+    $body = $request->getParsedBody();
+
+    $userGroup = new \Conftrack\Model\UserGroup($this->getContainer()->get('db'));
+    $userGroup->load([
+      'user_id' => $args['userId'],
+      'group_id' => $body['groupId']
+    ]);
+
+    try {
+      $userGroup->verify();
+      $userGroup->save();
+
+      $data['success'] = true;
+      $data['message'] = 'Group added successfully';
+
+    } catch (\Exception $e) {
+      $data['message'] = "Error: ".implode("\n", $userGroup->getMessages());
+    }
+
+    return $response->withJson($data);
+  });
+
+  $app->delete('/{userId}/group', function($request, $response, $args) {
+    $data = ['success' => false];
+    $body = $request->getParsedBody();
+
+    $userGroup = new \Conftrack\Model\UserGroup($this->getContainer()->get('db'));
+    $userGroup->find([
+        'user_id' => $args['userId'],
+        'group_id' => $body['groupId']
+    ]);
+
+    try {
+      $userGroup->delete();
+
+      $data['success'] = true;
+      $data['message'] = 'Group removed successfully';
+
+    } catch (\Exception $e) {
+      $data['message'] = "Error: ".implode("\n", $userGroup->getMessages());
+    }
+
+    return $response->withJson($data);
   });
 });

@@ -13,12 +13,77 @@
 
     <h3>Sponsors</h3>
     <table class="table">
-    {% for sponsor in sponsors %}
-    <tr>
-      <td><a href="/sponsor/view/{{ sponsor.id }}">{{ sponsor.name }}</a></td>
-    </tr>
-    {% endfor %}
+      <thead>
+        <th>Name</th>
+      </thead>
+      <tbody>
+        {% for sponsor in sponsors %}
+        <tr>
+          <td><a href="/sponsor/view/{{ sponsor.id }}">{{ sponsor.name }}</a></td>
+        </tr>
+        {% endfor %}
+      </tbody>
     </table>
+
+    <h3>Groups</h3>
+    <table class="table">
+      <thead>
+        <th>Name</th>
+        <th>&nbsp;</th>
+      </thead>
+      <tbody id="group-tbody">
+        {% for group in userGroups %}
+        <tr id="row{{ group.id }}">
+          <td>{{ group.name }} (<a href="/admin/group/view/{{ group.id }}">{{ group.key }})</a></td>
+          <td><a href="#" class="remove" id="{{ group.id }}">X</a></td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+
+    <select name="group_list" id="group_list">
+      {% for group in groups %}
+      <option value="{{ group.id }}">{{ group.name }} ({{ group.key }})</option>
+      {% endfor %}
+    </select>
+    <input type="button" name="add-group-btn" class="btn" id="add-group-btn" value="Add"/>
+    <input type="hidden" name="group-id-list" id="group-id-list" value=""/>
+
   </div>
 </div>
+
+<script>
+$(function() {
+  // Set up our add list instance
+  requirejs(['controls/add-list'], function(AddList) {
+    AddList.init(
+      $('#group-id-list'),
+      $('#group_list'),
+      $('#add-group-btn'),
+      $('#group-tbody')
+    );
+  });
+
+  $('#add-group-btn').click(function(e) {
+    e.preventDefault();
+    data = { groupId: $('#group_list').val() };
+    $.post('/user/{{ user.id }}/group', data, function(data) {
+      // do nothing here - success!
+    });
+  });
+  $('#group-tbody').on('click', 'a.remove', function(e) {
+    var target = $(e.target);
+    $.ajax({
+      url: '/user/{{ user.id }}/group',
+      method: 'DELETE',
+      dataType: 'json',
+      data: { groupId: target.attr('id') },
+      success: function(data) {
+        // do nothing here - success!
+      }
+    });
+  });
+});
+</script>
+
 {% endblock %}

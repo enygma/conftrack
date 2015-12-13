@@ -68,7 +68,7 @@ $container['errorHandler'] = function($c) {
 //----------------------
 
 $app = new \Slim\App($container);
-$app->add(new \Conftrack\Middleware\Auth());
+$app->add(new \Conftrack\Middleware\Auth($container));
 
 // Load the controllers
 $dir = new DirectoryIterator(APP_PATH.'/'.APP_NAMESPACE.'/Controller');

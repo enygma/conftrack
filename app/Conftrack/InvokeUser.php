@@ -13,14 +13,26 @@ class InvokeUser implements \Psecio\Invoke\UserInterface
 
 	public function getPermissions()
 	{
-		return [];
+    $permissions = $this->userData->permissions;
+    $return = [];
+
+    foreach ($permissions as $group) {
+      $return[] = $permissions->key;
+    }
+    return $return;
 	}
 	public function getGroups()
 	{
-		return [];
+    $groups = $this->userData->groups;
+    $return = [];
+
+    foreach ($groups as $group) {
+      $return[] = $group->key;
+    }
+    return $return;
 	}
 	public function isAuthed()
 	{
-		return ($this->userData !== null && isset($this->userData['id']));
+		return ($this->userData !== null && $this->userData->id !== null);
 	}
 }

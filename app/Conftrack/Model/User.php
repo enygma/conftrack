@@ -55,6 +55,15 @@ class User extends \Modler\Model\Mysql
         'method' => 'findByUserId',
         'local' => 'id'
       ]
+    ],
+    'groups' => [
+      'type' => 'relation',
+      'description' => 'Groups',
+      'relation' => [
+        'model' => '\\Conftrack\\Collection\\Groups',
+        'method' => 'findByUserId',
+        'local' => 'id'
+      ]
     ]
 	];
 

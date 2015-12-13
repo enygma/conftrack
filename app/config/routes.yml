@@ -1,2 +1,43 @@
 /profile/view:
   protected: on
+/admin/users:
+  protected: on
+  groups: [admin]
+/admin/users/status:
+  protected: on
+/event/create:
+  protected: on
+  groups: [admin]
+/event/view/[0-9]+:
+  protected: on
+/event/[0-9]+/sponsor:
+  protected: on
+  groups: [admin]
+/sponsor:
+  protected: on
+/sponsor/view/[0-9]+:
+  protected: on
+/sponsor/[0-9]+/file/[0-9a-zA-Z]+:
+  protected: on
+/sponsor/create:
+  protected: on
+  groups: [admin]
+/sponsor/edit/[0-9]+:
+  protected: on
+  groups: [admin]
+/sponsor/image/[0-9]+:
+  protected: on
+  groups: [admin]
+/sponsor/edit/[0-9]+:
+  protected: on
+  groups: [admin]
+/sponsor/[0-9]+/user:
+  protected: on
+  groups: [admin]
+/sponsor/[0-9]+/user:
+  protected: on
+  groups: [admin]
+/user/dashboard:
+  protected: on
+/user/view/[0-9]+:
+  protected: on

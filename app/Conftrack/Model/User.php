@@ -46,7 +46,16 @@ class User extends \Modler\Model\Mysql
 			'name' => 'Update Date',
 			'description' => 'Update Date',
 			'column' => 'updated'
-		]
+		],
+    'sponsors' => [
+      'type' => 'relation',
+      'description' => 'Sponsors',
+      'relation' => [
+        'model' => '\\Conftrack\\Collection\\Sponsors',
+        'method' => 'findByUserId',
+        'local' => 'id'
+      ]
+    ]
 	];
 
 	public function validateEmail($email)

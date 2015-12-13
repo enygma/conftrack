@@ -28,4 +28,17 @@ class Sponsors extends \Modler\Collection\Mysql
       $this->add($sponsor);
     }
   }
+
+  public function findByUserId($userId)
+  {
+    $sql = 'select sp.* from sponsors sp, sponsor_user su'
+      .' where sp.id = su.sponsor_id and su.user_id = :userId';
+    $results = $this->fetch($sql, ['userId' => $userId]);
+
+    foreach ($results as $result) {
+      $sponsor = new \Conftrack\Model\Sponsor($this->getDb());
+      $sponsor->load($result);
+      $this->add($sponsor);
+    }
+  }
 }

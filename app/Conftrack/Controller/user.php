@@ -93,11 +93,14 @@ $app->group('/user', function() use ($app) {
   });
 
   $app->get('/view/{userId}', function($request, $response, $args) {
-    $user = new \Conftrack\Model\User($this->getContainer()->get('db'));
+    $db = $this->getContainer()->get('db');
+
+    $user = new \Conftrack\Model\User($db);
     $user->findById($args['userId']);
 
     $data = [
-      'user' => $user->toArray()
+      'viewUser' => $user->toArray(),
+      'sponsors' => $user->sponsors->toArray(true)
     ];
     $this->view->render($response, 'user/view.twig', $data);
   });

@@ -26,6 +26,22 @@
   {% endfor %}
 </table>
 
+<h4>Events</h4>
+<table class="table table-striped">
+  <thead>
+    <th>Name</th>
+    <th>Dates</th>
+  </thead>
+  <tbody>
+  {% for event in events %}
+  <tr>
+    <td><a href="/event/view/{{ event.id }}">{{ event.name }}</a></td>
+    <td>{{ event.startDate }} - {{ event.endDate }}</td>
+  </tr>
+  {% endfor %}
+  </tbody>
+</table>
+
 <h4>Users</h4>
 <table class="table table-striped">
 <thead>

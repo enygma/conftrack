@@ -25,7 +25,8 @@ $app->group('/sponsor', function() use ($app) {
       'sponsor' => $sponsor->toArray(),
       'sponsorUsers' => $sponsor->users->toArray(true),
       'users' => $users->toArray(true),
-      'files' => $sponsor->files->toArray(true)
+      'files' => $sponsor->files->toArray(true),
+      'events' => $sponsor->events->toArray(true)
     ];
     $this->view->render($response, 'sponsor/view.twig', $data);
   });

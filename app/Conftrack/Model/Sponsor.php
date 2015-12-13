@@ -53,6 +53,15 @@ class Sponsor extends \Modler\Model\Mysql
         'local' => 'id'
       ]
     ],
+    'events' => [
+      'type' => 'relation',
+      'description' => 'Events',
+      'relation' => [
+        'model' => '\\Conftrack\\Collection\\Events',
+        'method' => 'findBySponsorId',
+        'local' => 'id'
+      ]
+    ],
   ];
 
   public function handleUpload($fileData)
